@@ -9,13 +9,18 @@ st.title("Apollo People Finder")
 st.caption("Find and verify professional email addresses")
 
 # Check for API keys in secrets
-if "APOLLO_API_KEY" not in st.secrets or "MV_API_KEY" not in st.secrets:
-    st.error("Please add your API keys to the app secrets (APOLLO_API_KEY and MV_API_KEY)")
+try:
+    api_key = st.secrets["APOLLO_API_KEY"]
+    mv_api_key = st.secrets["MV_API_KEY"]
+    st.success("✅ API keys configured")
+except KeyError:
+    st.error("❌ Please configure API keys in Streamlit secrets:")
+    st.code("""
+[secrets]
+APOLLO_API_KEY = "your_apollo_key"
+MV_API_KEY = "your_millionverifier_key"
+    """)
     st.stop()
-
-# Get API keys from secrets
-api_key = st.secrets["APOLLO_API_KEY"]
-mv_api_key = st.secrets["MV_API_KEY"]
 
 # 1. Upload CSV
 data_file = st.file_uploader("Upload comp_data.csv with company websites", type=["csv"])
