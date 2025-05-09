@@ -8,19 +8,38 @@ import time
 st.title("Apollo People Finder")
 st.caption("Find and verify professional email addresses")
 
-# Check for API keys in secrets
-try:
-    api_key = st.secrets["APOLLO_API_KEY"]
-    mv_api_key = st.secrets["MV_API_KEY"]
-    st.success("✅ API keys configured")
-except KeyError:
-    st.error("❌ Please configure API keys in Streamlit secrets:")
-    st.code("""
-[secrets]
-APOLLO_API_KEY = "your_apollo_key"
-MV_API_KEY = "your_millionverifier_key"
-    """)
+# Initialize session state for API keys
+if 'api_key' not in st.session_state:
+    st.session_state.api_key = st.secrets.get("APOLLO_API_KEY", "")
+if 'mv_api_key' not in st.session_state:
+    st.session_state.mv_api_key = st.secrets.get("MV_API_KEY", "")
+
+# API Keys section in sidebar
+with st.sidebar:
+    st.header("API Configuration")
+    api_key = st.text_input(
+        "Apollo API Key", 
+        value=st.session_state.api_key,
+        type="password",
+        help="Enter your Apollo API key"
+    )
+    mv_api_key = st.text_input(
+        "MillionVerifier API Key", 
+        value=st.session_state.mv_api_key,
+        type="password",
+        help="Enter your MillionVerifier API key"
+    )
+    
+    # Update session state
+    st.session_state.api_key = api_key
+    st.session_state.mv_api_key = mv_api_key
+
+# Check if API keys are provided
+if not api_key or not mv_api_key:
+    st.error("⚠️ Please enter your API keys in the sidebar")
     st.stop()
+else:
+    st.sidebar.success("✅ API keys configured")
 
 # 1. Upload CSV
 data_file = st.file_uploader("Upload comp_data.csv with company websites", type=["csv"])
