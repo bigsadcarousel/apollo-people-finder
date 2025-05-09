@@ -10,9 +10,9 @@ st.caption("Find and verify professional email addresses")
 
 # Initialize session state for API keys
 if 'api_key' not in st.session_state:
-    st.session_state.api_key = st.secrets.get("APOLLO_API_KEY", "")
+    st.session_state.api_key = ""
 if 'mv_api_key' not in st.session_state:
-    st.session_state.mv_api_key = st.secrets.get("MV_API_KEY", "")
+    st.session_state.mv_api_key = ""
 
 # API Keys section in sidebar
 with st.sidebar:
